@@ -1,0 +1,11 @@
+c:\Users\JF\Documents\trabalho_compiladores\obj\Debug\netcoreapp2.2\trabalho_compiladores.csprojAssemblyReference.cache
+c:\Users\JF\Documents\trabalho_compiladores\obj\Debug\netcoreapp2.2\trabalho_compiladores.csproj.CoreCompileInputs.cache
+c:\Users\JF\Documents\trabalho_compiladores\obj\Debug\netcoreapp2.2\trabalho_compiladores.AssemblyInfoInputs.cache
+c:\Users\JF\Documents\trabalho_compiladores\obj\Debug\netcoreapp2.2\trabalho_compiladores.AssemblyInfo.cs
+c:\Users\JF\Documents\trabalho_compiladores\bin\Debug\netcoreapp2.2\trabalho_compiladores.deps.json
+c:\Users\JF\Documents\trabalho_compiladores\bin\Debug\netcoreapp2.2\trabalho_compiladores.runtimeconfig.json
+c:\Users\JF\Documents\trabalho_compiladores\bin\Debug\netcoreapp2.2\trabalho_compiladores.runtimeconfig.dev.json
+c:\Users\JF\Documents\trabalho_compiladores\bin\Debug\netcoreapp2.2\trabalho_compiladores.dll
+c:\Users\JF\Documents\trabalho_compiladores\bin\Debug\netcoreapp2.2\trabalho_compiladores.pdb
+c:\Users\JF\Documents\trabalho_compiladores\obj\Debug\netcoreapp2.2\trabalho_compiladores.dll
+c:\Users\JF\Documents\trabalho_compiladores\obj\Debug\netcoreapp2.2\trabalho_compiladores.pdb
