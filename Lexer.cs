@@ -56,7 +56,7 @@ public class Lexer
 
         while (this.file.ReadLine()) != null)
         {
-            this.lookHead = Convert.ToInt32(this.file.ReadLine());
+            this.lookHead = Convert.ToInt32(this.file.Read());
             c = (char)this.lookHead;
 
             switch (estado)
