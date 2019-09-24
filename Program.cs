@@ -9,7 +9,5 @@ public class Program
         Lexer s = new Lexer("arq1.txt");
 
         s.printTS();
-
-        //s.retornaPonteiro();
     }
 }
