@@ -1,11 +1,9 @@
 public class Tag
 {
-    public enum Tags
+    private string EOF = "-1", KW_IF = "1", KW_ELSE = "2", KW_THEN = "3", KW_PRINT = "4";
+
+    public string getEOF()
     {
-        EOF = -1,
-        KW_IF = 1,
-        KW_ELSE = 2,
-        KW_THEN = 3,
-        KW_PRINT = 4
+        return this.EOF;
     }
 }
