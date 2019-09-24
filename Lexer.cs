@@ -1,13 +1,11 @@
 using System;
 using System.IO;
-using System.Text;
 
 public class Lexer
 {
     private int lookHead, numLinha, numColuna;
     private StreamReader file;
     private Simbol_Table ts = new Simbol_Table();
-    Encoding ascii = Encoding.ASCII;
 
     public Lexer(string arq)
     {      
@@ -15,7 +13,7 @@ public class Lexer
         {
             this.file = File.OpenText(arq);
 
-            this.lookHead = 0;
+            this.lookHead = 35;
             this.numLinha = 1;
             this.numColuna = 1;
         }
@@ -35,16 +33,102 @@ public class Lexer
 
     // imprime tabela de simbolos
     public void printTS() { this.ts.printTokens(); }
+    
+    // metodo ainda para ser testado
+    public void retornaPonteiro()
+    {
+        if((char)this.lookHead != '')
+        {
+            this.file.Seek(SeekOrigin.Current-1);
+        }
+    }
+
+    public void sinalizaErroLexico(string message)
+    {
+        Console.Write("[Erro Lexico]: "+ message+ "\n");
+    }
+
+    public Token proximoToken()
+    {
+        int estado = 1;
+        string lexema = "";
+        char c = '\u0000';
+
+        while (this.file.ReadLine()) != null)
+        {
+            this.lookHead = Convert.ToInt32(this.file.ReadLine());
+            c = (char)this.lookHead;
+
+            switch (estado)
+            {
+                case 1:
+                    if(c == ''){ 
+                        return Token(Tag.Tags.EOF, "EOF", this.numLinha, this.numColuna);
+                    }
+
+                    if(c == ' ' or c == '\t' or c == '\n' or c == '\r'){
+                        estado = 1;
+                    }
+
+                    if(c == '='){
+                        estado = 2;
+                    }
+                    break;
+
+                case 2:
+                    Console.Write("Teste");
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
 
     /*
-        Metodo ainda não esta funcionando, deve olhar como mexe com a
-        tabela ascii no C#, pelo exemplo do professor, ele converte os
-        num inteiros para caracter.
-         
-    public void retornaPonteiro(){
-        byte[] bytes = {this.lookHead};
-        string teste = Encoding.ASCII.GetString(bytes);
-        Console.WriteLine(teste);
+    * Codigo que encontrei na net que pode ajudar
+    * no desenvolvimento em saber o proximo token
+    *
+    public void proxPonteiro(){
+        int min = 0;
+        int max = 128;
+        for (int i = min; i < max; i++)
+        {
+            // Get ASCII character.
+            char c = (char)i;
+
+            // Get display string.
+            string display = string.Empty;
+            if (char.IsWhiteSpace(c))
+            {
+                display = c.ToString();
+                switch (c)
+                {
+                    case '\t':
+                        display = "\\t";
+                        Console.WriteLine(display);
+                        break;
+                    case ' ':
+                        display = "space";
+                        Console.WriteLine(display);
+                        break;
+                    case '\n':
+                        display = "\\n";
+                        Console.WriteLine(display);
+                        break;
+                    case '\r':
+                        display = "\\r";
+                        Console.WriteLine(display);
+                        break;
+                    case '\v':
+                        display = "\\v";
+                        break;
+                    case '\f':
+                        display = "\\f";
+                        break;
+                }
+            }
+        }    
     }
     */
 }
