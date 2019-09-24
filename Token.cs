@@ -5,6 +5,8 @@ public class Token
     private string nome, lexema;
     private int linha, coluna;
 
+    public Token(){}
+
     public Token(string nome, string lexema, int linha, int coluna)
     {
         this.nome = nome;
