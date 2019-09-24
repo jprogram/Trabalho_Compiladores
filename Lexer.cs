@@ -26,7 +26,7 @@ public class Lexer
 
     public void closeFile()
     {
-        try { file.Close(); }
+        try { this.file.Close(); }
         
         catch (Exception e) { Console.WriteLine("Erro ao fechar arquivo"); }
     }  
@@ -73,6 +73,10 @@ public class Lexer
                     if(c == '='){
                         estado = 2;
                     }
+
+                    if(c == '!'){
+                        estado = 4;
+                    }
                     break;
 
                 case 2:
@@ -80,6 +84,8 @@ public class Lexer
                     break;
 
                 default:
+                    Console.Write("Vazio");
+                    return null;
                     break;
             }
         }
