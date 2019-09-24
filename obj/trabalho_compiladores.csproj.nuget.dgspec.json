@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\JF\\Documents\\trabalho_compiladores\\trabalho_compiladores.csproj": {}
+    "C:\\Users\\JF\\Trabalho_Compiladores\\trabalho_compiladores.csproj": {}
   },
   "projects": {
-    "C:\\Users\\JF\\Documents\\trabalho_compiladores\\trabalho_compiladores.csproj": {
+    "C:\\Users\\JF\\Trabalho_Compiladores\\trabalho_compiladores.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\JF\\Documents\\trabalho_compiladores\\trabalho_compiladores.csproj",
+        "projectUniqueName": "C:\\Users\\JF\\Trabalho_Compiladores\\trabalho_compiladores.csproj",
         "projectName": "trabalho_compiladores",
-        "projectPath": "C:\\Users\\JF\\Documents\\trabalho_compiladores\\trabalho_compiladores.csproj",
+        "projectPath": "C:\\Users\\JF\\Trabalho_Compiladores\\trabalho_compiladores.csproj",
         "packagesPath": "C:\\Users\\JF\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\JF\\Documents\\trabalho_compiladores\\obj\\",
+        "outputPath": "C:\\Users\\JF\\Trabalho_Compiladores\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
