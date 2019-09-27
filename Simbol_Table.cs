@@ -13,28 +13,37 @@ public class Simbol_Table
         this.tokens = new List<Token>();
 
         // Definindo o tokens
-        definirToken("KW_IF", "if");
-        definirToken("KW_ELSE", "else");
-        definirToken("KW_THEN", "then");
-        definirToken("KW_PRINT", "print");
+        definirToken("KW_IF", "if", 0 , 0);
+        definirToken("KW_ELSE", "else", 0, 0);
+        definirToken("KW_THEN", "then", 0 , 0);
+        definirToken("KW_PRINT", "print", 0, 0);
 
     }
 
-    public void definirToken(string chave, string lexema)
+    public Token definirToken(string chave, string lexema, int linha, int coluna)
     {
-        this.token = new Token(chave, lexema, 0, 0);
+        this.token = new Token(chave, lexema, linha, coluna);
         this.tokens.Add(token);
+        return this.token;
     }
 
     // Metodo que add token criado para a tabela de simbolos
-    public void addToken(string nomeTag, string lexema) { this.table.Add(nomeTag, lexema); }
+    public void addTokenTS(string nomeTag, string lexema) { this.table.Add(nomeTag, lexema); }
 
+    public Token getToken(string lexema){
+        foreach(Token tok in this.tokens){
+            if(tok.getLexema().Equals(lexema)){
+                return tok;
+            }
+        }
+        return null;
+    }
 
     public void printTokens()
     {
         foreach(Token tok in this.tokens)
         {
-            Console.WriteLine(tok.toString());
+            Console.Write("\n"+tok.toString());
         }
     }
 }
