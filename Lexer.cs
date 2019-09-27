@@ -3,16 +3,17 @@ using System.IO;
 
 public class Lexer
 {
+    private string linha;
     private int lookHead, numLinha, numColuna;
-    private FileStream file;
+    private StreamReader file;
     private Simbol_Table ts = new Simbol_Table();
 
     public Lexer(string arq)
     {      
         try
         {
-            this.file = File.OpenRead(arq);
-
+            this.file = new StreamReader(arq);
+            this.linha = this.file.ReadLine();
             this.lookHead = 0;
             this.numLinha = 1;
             this.numColuna = 1;
@@ -33,84 +34,134 @@ public class Lexer
 
     // imprime tabela de simbolos
     public void printTS() { this.ts.printTokens(); }
-    
-    // metodo ainda para ser testado
-    public void retornaPonteiro()
-    {
-        if( this.lookHead != 0 )
-        {
-            this.file.Seek((long)SeekOrigin.Current-1, SeekOrigin.Begin);
-        }
-    }
 
     public void sinalizaErroLexico(string message)
     {
         Console.Write("[Erro Lexico]: "+ message+ "\n");
     }
 
-    /*
     // Funcao incompleta falta muito ajustes
     // Fiz retornar tokens criados para testar se ele realmente estava
     // lendo o arquivo txt e entrando nas condicionais
     // Ao retirar do comentario, pode reparar que ele consome um caracter estranho
 
-    public Token proximoToken()
+    public Token proximoToken(int ponteiro)
     {
         Tag tag = new Tag();
+        Token t;
+
         int estado = 1;
         string lexema = "";
-        char c = '\u0000';
+        //char c = '\u0000';
 
-        byte[] bytes = new byte[this.file.Length];
-        int total = (int)this.file.Length;
+        char[] c = this.linha.ToCharArray();
 
-        int ponteiro = 0;
-
-        StreamReader sr = new StreamReader(this.file);
-
-        while (true)
+        while (ponteiro <= 20)
         {
-            this.lookHead = this.file.Read(bytes, ponteiro, total);
-            c = (char)this.lookHead;
-
+            Console.Write("\nEstado: {0}", estado);
             switch (estado)
             {
                 case 1:
-                    if(c.Equals('\u0000'))
-                    { 
-                        return new Token(tag.getEOF(), "EOF", this.numLinha, this.numColuna);
-                    }
         
-                    else if(c.Equals(' ') || c.Equals('\t') || c.Equals('\n') || c.Equals('\r'))
+                    if(c[ponteiro].Equals(' ') || c[ponteiro].Equals('\t') || c[ponteiro].Equals('\n') || c[ponteiro].Equals('\r'))
                     {
-                        estado = 1;
                         ponteiro++;
-                        return new Token("KW", "tteste", this.numLinha, this.numColuna);
+                        estado = 1;
                     }
 
-                    else if(c.Equals('='))
+                    else if(c[ponteiro].Equals('='))
                     {
-                        estado = 2;
+                        lexema = "=";
                         ponteiro++;
-                        return new Token("KW_=", "=", this.numLinha, this.numColuna);
+                        estado = 2;
+                    }
+
+                    else if(Char.IsLetter(c[ponteiro])){
+                        lexema += c[ponteiro];
+                        ponteiro++;
+                        estado = 3;
+                    }
+
+                    else if(Char.IsDigit(c[ponteiro])){
+                        Console.Write("token: {0}", c[ponteiro]);
+                        lexema = "";
+                        //ponteiro++;
+                        estado = 4;
+                    }
+                    else{
+                        ponteiro++;
+                        estado = 1;
                     }
                     
-                    return new Token("Ab", c+"", this.numLinha, this.numColuna); 
-                    break;
-                case 2:
-                    Console.Write("Teste");
-                    return new Token("a", "teste", this.numLinha, this.numColuna);
                     break;
 
-                default:
-                    Console.Write("Vazio");
-                    return new Token("aa", "vazio", this.numLinha, this.numColuna);
+                case 2:
+
+                    if(lexema.Equals("=")){
+                        ponteiro++;
+            
+                        t = ts.getToken(lexema);
+
+                        if(t is null){
+                            t = ts.definirToken(Tag.operadores.OP_IGUAL.ToString(), "=", this.numLinha, this.numColuna);
+                            ts.addTokenTS(Tag.operadores.OP_IGUAL.ToString(), "=");
+                            return t;
+                        }
+                        estado = 1;
+                    }
+                    else{
+                        sinalizaErroLexico("Caractere invalido [" + c[ponteiro] + "] na linha " +
+                        numLinha + " e coluna " + numColuna);
+                        return null;
+                    }
                     break;
+
+                case 3:
+                    if(Char.IsLetter(c[ponteiro])){
+                        Console.Write("\nEstado: {0} q", estado);
+                        //estado = 1;
+                        //ponteiro++;
+                    }    
+                    else{
+                        t = ts.getToken(lexema);
+                        if(t is null){
+                            t = ts.definirToken(Tag.Tags.ID.ToString(), lexema, this.numLinha, this.numColuna);
+                            ts.addTokenTS(Tag.Tags.ID.ToString(), lexema);
+                        }          
+                        return t;
+                    }
+
+                    break;    
+                /*     
+                
+                case 4:
+                    for(int i = ponteiro; i < c.Length; i++){
+                        Console.Write("Entrou e");
+                        lexema += c[ponteiro];
+                        ponteiro++;
+                    }
+            
+                    Console.Write(lexema);
+                    t = ts.getToken(lexema);
+                    if(t is null){
+                        Console.Write(Tag.Tags.VAL.ToString());
+                        t = ts.definirToken(Tag.Tags.VAL.ToString(), lexema, this.numLinha, this.numColuna);
+                        ts.addTokenTS(Tag.Tags.VAL.ToString(), lexema);
+                    }
+                    return t;     
+                     
+                    //ponteiro++;    
+                    break;
+
+                */
+                default:
+                    return new Token(Tag.Tags.EOF.ToString(), "EOF", this.numLinha, this.numColuna);
+                    break;
+                    
             }
         }
-        return new Token("Nulo", "testeparaficartestado", this.numLinha, this.numColuna);
+        return null;
     }
-    */
 
     /*
     * Codigo que encontrei na net que pode ajudar
