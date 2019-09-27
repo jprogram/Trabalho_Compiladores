@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Simbol_Table
 {
-    private Hashtable table = new Hashtable(); 
+    public Hashtable table = new Hashtable(); 
     private List<Token> tokens; //Lista para armazenar o token e a posicao em que aparece
     private Token token;
 
