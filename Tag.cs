@@ -9,7 +9,7 @@ public class Tag
         KW_PRINT = 4,
 
         ID = 20,
-        VAL = 21
+        NUM = 21
 
     }
 
