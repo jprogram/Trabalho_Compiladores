@@ -1,11 +1,10 @@
 using System;
 using System.IO;
-using System.Collections;
 
 public class Lexer
 {
     private string linha;
-    private int lookHead, numLinha, numColuna;
+    private int lookHead, numLinha, numColuna, contadorId, contadorNum;
     private StreamReader file;
     private Simbol_Table ts = new Simbol_Table();
 
@@ -15,7 +14,16 @@ public class Lexer
         {
             this.file = new StreamReader(arq);
             this.linha = this.file.ReadLine();
-            this.lookHead = 0;
+
+            this.lookHead = 0; // considerei como se fosse um ponteiro para a leitura dos caracters
+
+            // Estes são os contadores para serem melhor identificados
+            // na hora de montar e salvar o token na hashtable
+            this.contadorId = 1;
+            this.contadorNum = 1;
+
+            // variaveis para descobrirmos a localização dos tokens
+            // formados no arquivo txt
             this.numLinha = 1;
             this.numColuna = 1;
         }
@@ -41,20 +49,19 @@ public class Lexer
         Console.Write("[Erro Lexico]: "+ message+ "\n");
     }
 
-    public void lerProxLinha(){
-        this.linha = this.file.ReadLine();
-        this.ts.table.Remove(Tag.Tags.ID.ToString());
-        Console.Write(this.linha);
-        this.lookHead = 0;
-    }
-
-
+    // Metodo que simula o automato
+    // irá ler os caracters e verifica-los para a montagens dos tokens e da hashtable
     public Token proximoToken()
     {
+        // instancias dos objetos
         Tag tag = new Tag();
         Token t;
 
-        int estado = 1;
+        int estado = 1; // estado do automato
+
+        // Separei em lexema para strings e a var valor para numerico
+        // soh para identificar melhor na montagem do lexema e jogar na hashtable
+        // mas poderia muito bem deixar apenas o var lexema para os dois.
         string lexema = "", valor = "";
 
         char[] c = this.linha.ToCharArray();
@@ -95,11 +102,14 @@ public class Lexer
                     
                     break;
 
-                case 2:
+                case 2: // simbolo de igual
 
                     if(lexema.Equals("=")){
+                        this.numColuna = this.lookHead;
+
                         this.lookHead++;
-            
+
+                        // verifica se ja existe algum token ja criado
                         t = ts.getToken(lexema);
 
                         if(t is null){
@@ -111,27 +121,32 @@ public class Lexer
                     }
                     else{
                         sinalizaErroLexico("Caractere invalido [" + c[this.lookHead] + "] na linha " +
-                        numLinha + " e coluna " + numColuna);
+                        this.numLinha + " e coluna " + this.numColuna);
                         return null;
                     }
                     break;
 
-                case 3:
+                case 3: // caso possuir algum caracter
+
                     while(Char.IsLetter(c[this.lookHead])){
                         lexema += c[this.lookHead];
                         this.lookHead++;
                     }
 
                     t = ts.getToken(lexema);
+
                     if(t is null){
-                        t = ts.definirToken(Tag.Tags.ID.ToString(), lexema, this.numLinha, this.numColuna);
-                        ts.addTokenTS(Tag.Tags.ID.ToString(), lexema);
+                        this.numColuna = this.lookHead;
+
+                        t = ts.definirToken((Tag.Tags.ID.ToString()+this.contadorId), lexema, this.numLinha, this.numColuna);
+                        ts.addTokenTS((Tag.Tags.ID.ToString()+this.contadorId), lexema);
+                        this.contadorId++;
                         return t;
                     }          
                         
                     break;    
 
-                case 4:
+                case 4: //caso possua algum valor numerico no arq txt
                     while(this.lookHead < c.Length)
                     {
                         valor += c[this.lookHead];
@@ -141,8 +156,12 @@ public class Lexer
                     t = ts.getToken(valor);
 
                     if(t is null){
-                        t = ts.definirToken(Tag.Tags.NUM.ToString(), valor, this.numLinha, this.numColuna);
-                        ts.addTokenTS(Tag.Tags.NUM.ToString(), valor);    
+                        this.numColuna = this.lookHead;
+                        
+                        t = ts.definirToken((Tag.Tags.NUM.ToString()+this.contadorNum), valor, this.numLinha, this.numColuna);
+                        ts.addTokenTS((Tag.Tags.NUM.ToString()+this.contadorNum), valor);
+                        this.contadorNum++;    
+                        
                         return t;
                     }            
 
