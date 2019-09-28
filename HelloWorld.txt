@@ -1,2 +1,2 @@
-affd = 1532
+variavel = 1532
 b = 12
