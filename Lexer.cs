@@ -1,3 +1,12 @@
+/*
+    Esta classe esta com APENAS 4 estados,
+    
+    Estado 1 = Estado inicial, onde verifica tudo e muda de estados
+    Estado 2 = Operador de igual
+    Estado 3 = Verifica os caracters, para montagem de Id's
+    Estado 4 = Tratamento para valores numericos
+ */
+
 using System;
 using System.IO;
 
@@ -55,7 +64,7 @@ public class Lexer
     {
         // instancias dos objetos
         Tag tag = new Tag();
-        Token t;
+        Token token;
 
         int estado = 1; // estado do automato
 
@@ -64,10 +73,28 @@ public class Lexer
         // mas poderia muito bem deixar apenas o var lexema para os dois.
         string lexema = "", valor = "";
 
+        // Vetor que armazena a string(linha) lida pelo arquivo txt
         char[] c = this.linha.ToCharArray();
 
-        while (this.lookHead < c.Length)
+        while (linha != null && this.lookHead <= c.Length)
         {
+            // Maldito recurso tecnico para ler a maldita
+            // linha e criar o maldito token
+            // mas este maldito alem de estar horrivelmente horrivel escrito
+            // este maldito nao le a maldita variavel a e a outra maldita 
+            // variavel que esta carinhosamente chamada de maldito
+            if(this.lookHead == c.Length){
+                this.lookHead = 0;
+                this.linha = this.file.ReadLine();
+                if(this.linha != null){
+                    this.numLinha++;
+                    c = this.linha.ToCharArray();
+                }
+                else{
+                    break;
+                }
+            }
+            
             switch (estado)
             {
                 case 1:
@@ -86,13 +113,14 @@ public class Lexer
                     }
 
                     else if(Char.IsLetter(c[this.lookHead])){
+                        Console.Write("\nLexema = {0}", lexema);
                         lexema += c[this.lookHead];
                         this.lookHead++;
                         estado = 3;
                     }
 
                     else if(Char.IsDigit(c[this.lookHead])){
-                        lexema = "";
+                        valor = "";
                         estado = 4;
                     }
                     else{
@@ -110,12 +138,12 @@ public class Lexer
                         this.lookHead++;
 
                         // verifica se ja existe algum token ja criado
-                        t = ts.getToken(lexema);
+                        token = ts.getToken(lexema);
 
-                        if(t is null){
-                            t = ts.definirToken(Tag.operadores.OP_IGUAL.ToString(), "=", this.numLinha, this.numColuna);
+                        if(token is null){
+                            token = ts.definirToken(Tag.operadores.OP_IGUAL.ToString(), "=", this.numLinha, this.numColuna);
                             ts.addTokenTS(Tag.operadores.OP_IGUAL.ToString(), "=");
-                            return t;
+                            return token;
                         }
                         estado = 1;
                     }
@@ -128,23 +156,37 @@ public class Lexer
 
                 case 3: // caso possuir algum caracter
 
-                    while(Char.IsLetter(c[this.lookHead])){
+                    while(Char.IsLetter(c[this.lookHead])){                
                         lexema += c[this.lookHead];
                         this.lookHead++;
+                        Console.Write("\n{0}", c[this.lookHead]);
                     }
 
-                    t = ts.getToken(lexema);
+                    // Caso o token não existir ele cria e add na hashtable
+                    // caso contrario só retorna o token ja existente e muda a linha e coluna
+                    // em que aparece no arquivo txt
+                    token = ts.getToken(lexema);
 
-                    if(t is null){
+                    if(token is null){ 
                         this.numColuna = this.lookHead;
-
-                        t = ts.definirToken((Tag.Tags.ID.ToString()+this.contadorId), lexema, this.numLinha, this.numColuna);
+                        // Cria o token e add na hashtable
+                        token = ts.definirToken((Tag.Tags.ID.ToString()+this.contadorId), lexema, this.numLinha, this.numColuna);
                         ts.addTokenTS((Tag.Tags.ID.ToString()+this.contadorId), lexema);
+
+                        //Contador para incrementar a cada id criado
                         this.contadorId++;
-                        return t;
-                    }          
+                        lexema = "";
                         
-                    break;    
+                        return token;
+                    }
+
+                    estado = 1;
+                    lexema = "";
+
+                    token.setLinha(this.numLinha);
+                    token.setColuna(this.lookHead);
+        
+                    return token;    
 
                 case 4: //caso possua algum valor numerico no arq txt
                     while(this.lookHead < c.Length)
@@ -153,16 +195,16 @@ public class Lexer
                         this.lookHead++;
                     }
 
-                    t = ts.getToken(valor);
+                    token = ts.getToken(valor);
 
-                    if(t is null){
+                    if(token is null){
                         this.numColuna = this.lookHead;
                         
-                        t = ts.definirToken((Tag.Tags.NUM.ToString()+this.contadorNum), valor, this.numLinha, this.numColuna);
+                        token = ts.definirToken((Tag.Tags.NUM.ToString()+this.contadorNum), valor, this.numLinha, this.numColuna);
                         ts.addTokenTS((Tag.Tags.NUM.ToString()+this.contadorNum), valor);
                         this.contadorNum++;    
                         
-                        return t;
+                        return token;
                     }            
 
                     break;
