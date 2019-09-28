@@ -1,5 +1,9 @@
 public class Tag
 {
+    /* Criei variaveis do tipo enum, seguindo um pouco do
+    *  programa que o professor disponibilizou em Python
+    *  onde ele utiliza o enum para a criacao das tags. 
+    */
     public enum Tags
     {
         EOF = -1, 
