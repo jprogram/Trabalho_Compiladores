@@ -1,2 +1,3 @@
-variavel = 1532
+print a
+maldito = 666
 b = 12
